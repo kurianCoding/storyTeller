@@ -43,6 +43,13 @@ func GetRandomWord(in string) string {
 	ra1 := rand.New(ra)
 	var nu int
 	var randomWord string
+
+	/*
+		TODO
+		   how to ensure that this loop does not continually go on
+		   in case the limit of iterations is increased and words
+		   repeat
+	*/
 	for randomWord == "" && usedWord[randomWord] == false {
 		nu = ra1.Intn(len(storyslice))
 		randomWord = storyslice[nu]
