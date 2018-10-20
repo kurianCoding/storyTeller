@@ -5,25 +5,63 @@ import (
 	"fmt"
 	tags "github.com/grokify/html-strip-tags-go"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"os"
 	"reflect"
+	"strings"
+	"time"
 )
 
 /*
    this application write stories.
 */
+var usedWord = make(map[string]bool)
+
 func main() {
 
 	var keyword string
+	var story string
+	n := 10
 	fmt.Scanf("%s", &keyword)
 	suggestions := GetSuggestions(keyword)
-	fmt.Println(suggestions)
+	usedWord[keyword] = true
+	for i := 0; i < n; i++ {
+		suggestion := RandomSelect(suggestions)
+		fmt.Println(suggestion)
+		story = story + fmt.Sprintf(" %s", suggestion)
+		keyword = GetRandomWord(story)
+		suggestions = GetSuggestions(keyword)
+		usedWord[keyword] = true
+	}
+	//fmt.Println(story)
 	return
 }
-func RandomSelect(stories []string) string {
+func GetRandomWord(in string) string {
+	storyslice := strings.Split(in, " ")
+	ra := rand.NewSource(time.Now().UnixNano())
+	ra1 := rand.New(ra)
+	var nu int
+	var randomWord string
+	for randomWord == "" && usedWord[randomWord] == false {
+		nu = ra1.Intn(len(storyslice))
+		randomWord = storyslice[nu]
+	}
 
+	return randomWord
 }
+
+func RandomSelect(stories []string) string {
+	/*
+		this function accepts the slice of strings
+		selects one at randome and returns it
+	*/
+	ra := rand.NewSource(time.Now().UnixNano())
+	ra1 := rand.New(ra)
+	nu := ra1.Intn(len(stories))
+	return stories[nu]
+}
+
 func GetSuggestions(keyword string) []string {
 	/*
 		get the first letter
@@ -56,6 +94,9 @@ func GetSuggestions(keyword string) []string {
 			}
 
 		}
+	}
+	if len(storySuggestion) == 0 {
+		fmt.Println("err:" + keyword)
 	}
 	return storySuggestion
 }
