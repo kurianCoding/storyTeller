@@ -22,19 +22,19 @@ func main() {
 
 	var keyword string
 	var story string
-	n := 10
+	n := 100
 	fmt.Scanf("%s", &keyword)
 	suggestions := GetSuggestions(keyword)
 	usedWord[keyword] = true
 	for i := 0; i < n; i++ {
 		suggestion := RandomSelect(suggestions)
-		fmt.Println(suggestion)
 		story = story + fmt.Sprintf(" %s", suggestion)
 		keyword = GetRandomWord(story)
+		fmt.Println(suggestion)
 		suggestions = GetSuggestions(keyword)
 		usedWord[keyword] = true
 	}
-	//fmt.Println(story)
+	fmt.Println(story)
 	return
 }
 func GetRandomWord(in string) string {
@@ -50,7 +50,7 @@ func GetRandomWord(in string) string {
 		   in case the limit of iterations is increased and words
 		   repeat
 	*/
-	for randomWord == "" && usedWord[randomWord] == false {
+	for randomWord == "" || usedWord[randomWord] == true {
 		nu = ra1.Intn(len(storyslice))
 		randomWord = storyslice[nu]
 	}
